@@ -1,40 +1,120 @@
-import numpy as np
-import matplotlib.pyplot as plt
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corn Market Graph</title>
+    <!-- Link to Matplotlib CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.15.1/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-scale/3.2.2/d3-scale.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-axis/1.0.10/d3-axis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-fetch/2.1.1/d3-fetch.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matplotlib-inline/0.1.0/matplotlib-inline.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-selection/1.4.0/d3-selection.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-transition/2.0.0/d3-transition.min.js"></script>
+</head>
+<body>
+    <h1>Market for Corn</h1>
+    <div id="plot"></div>
 
-# Generate data points for demand curve
-quantity_demanded = np.arange(0, 10, 1)
-price_demand = 10 - quantity_demanded
+    <script>
+        // JavaScript code to generate the plot
+        // This code uses Matplotlib to generate the plot
+        // You need to replace it with the appropriate Python code
+        // Ensure you have Matplotlib installed in your environment
 
-# Generate data points for supply curve
-quantity_supplied = np.arange(0, 10, 1)
-price_supply = quantity_supplied
+        // Generate data points for demand curve
+        const quantity_demanded = Array.from({length: 11}, (_, i) => i);
+        const price_demand = quantity_demanded.map(q => 10 - q);
 
-# Equilibrium point
-equilibrium_quantity = 5
-equilibrium_price = 5
+        // Generate data points for supply curve
+        const quantity_supplied = Array.from({length: 11}, (_, i) => i);
+        const price_supply = quantity_supplied;
 
-# Price set above equilibrium
-price_above = 7
+        // Equilibrium point
+        const equilibrium_quantity = 5;
+        const equilibrium_price = 5;
 
-# Create the plot
-plt.figure(figsize=(8, 6))
+        // Price set above equilibrium
+        const price_above = 7;
 
-# Plot demand and supply curves
-plt.plot(quantity_demanded, price_demand, label='Demand Curve', color='blue')
-plt.plot(quantity_supplied, price_supply, label='Supply Curve', color='green')
+        // Create SVG element
+        const svg = d3.select("#plot").append("svg")
+            .attr("width", 800)
+            .attr("height", 600);
 
-# Plot equilibrium point
-plt.scatter(equilibrium_quantity, equilibrium_price, color='red', label='Equilibrium Point')
+        // Create scales for x and y axes
+        const xScale = d3.scaleLinear()
+            .domain([0, 10])
+            .range([50, 750]);
 
-# Plot horizontal line at price above equilibrium
-plt.axhline(y=price_above, color='orange', linestyle='--', label='Price Above Equilibrium')
+        const yScale = d3.scaleLinear()
+            .domain([0, 10])
+            .range([550, 50]);
 
-# Add labels and legend
-plt.xlabel('Quantity of Corn')
-plt.ylabel('Price of Corn')
-plt.title('Market for Corn')
-plt.legend()
+        // Add axes
+        const xAxis = d3.axisBottom(xScale);
+        const yAxis = d3.axisLeft(yScale);
 
-# Show plot
-plt.grid(True)
-plt.show()
+        svg.append("g")
+            .attr("transform", "translate(0, 550)")
+            .call(xAxis);
+
+        svg.append("g")
+            .attr("transform", "translate(50, 0)")
+            .call(yAxis);
+
+        // Plot demand and supply curves
+        const line = d3.line()
+            .x((d, i) => xScale(quantity_demanded[i]))
+            .y((d, i) => yScale(price_demand[i]));
+
+        svg.append("path")
+            .datum(quantity_demanded)
+            .attr("class", "line")
+            .attr("d", line)
+            .style("stroke", "blue");
+
+        const line2 = d3.line()
+            .x((d, i) => xScale(quantity_supplied[i]))
+            .y((d, i) => yScale(price_supply[i]));
+
+        svg.append("path")
+            .datum(quantity_supplied)
+            .attr("class", "line")
+            .attr("d", line2)
+            .style("stroke", "green");
+
+        // Plot equilibrium point
+        svg.append("circle")
+            .attr("cx", xScale(equilibrium_quantity))
+            .attr("cy", yScale(equilibrium_price))
+            .attr("r", 5)
+            .style("fill", "red");
+
+        // Plot horizontal line at price above equilibrium
+        svg.append("line")
+            .attr("x1", xScale(0))
+            .attr("y1", yScale(price_above))
+            .attr("x2", xScale(10))
+            .attr("y2", yScale(price_above))
+            .style("stroke-dasharray", ("3, 3"))
+            .style("stroke", "orange");
+
+        // Add labels
+        svg.append("text")
+            .attr("x", 400)
+            .attr("y", 590)
+            .style("text-anchor", "middle")
+            .text("Quantity of Corn");
+
+        svg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 15)
+            .attr("x", -300)
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text("Price of Corn");
+    </script>
+</body>
+</html>
